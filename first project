@@ -1,0 +1,84 @@
+#include <iostream>
+using namespace std;
+
+char board[8][8] = {
+    {'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'},
+    {'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+    {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+    {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+    {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+    {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+    {'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+    {'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'}
+};
+
+// Function to display the chessboard
+void displayBoard() {
+    cout << "  a b c d e f g h\n";
+    for (int row = 0; row < 8; row++) {
+        cout << 8 - row << " ";
+        for (int col = 0; col < 8; col++) {
+            cout << board[row][col] << " ";
+        }
+        cout << 8 - row << endl;
+    }
+    cout << "  a b c d e f g h\n";
+}
+
+// Function to move a piece
+bool movePiece(char startCol, int startRow, char endCol, int endRow)
+{
+    int sc = startCol - 'a';
+    int sr = 8 - startRow;
+    int ec = endCol - 'a';
+    int er = 8 - endRow;
+
+    // Check if move is within bounds
+    if (sr < 0 || sr > 7 || sc < 0 || sc > 7 || er < 0 || er > 7 || ec < 0 || ec > 7) {
+        cout << "Invalid move: Out of bounds\n";
+        return false;
+    }
+
+    // Check if there's a piece at the start position
+    if (board[sr][sc] == ' ') {
+        cout << "Invalid move: No piece at the start position\n";
+        return false;
+    }
+
+    // Move piece
+    board[er][ec] = board[sr][sc];
+    board[sr][sc] = ' ';
+    return true;
+}
+
+int main() 
+{
+    cout << "Welcome to Simple Chess Game!\n";
+    char startCol, endCol;
+    int startRow, endRow;
+    bool playerTurn = true;  // True for White's turn, False for Black's turn
+
+    // Game loop
+    while (true) {
+        displayBoard();
+        cout << (playerTurn ? "White's" : "Black's") << " move\n";
+        cout << "Enter your move (e.g., e2 e4) or 'q' to quit: ";
+        cin >> startCol;
+
+        if (startCol == 'q') {
+            cout << "Thanks for playing!\n";
+            break;
+        }
+
+        cin >> startRow >> endCol >> endRow;
+
+        // Attempt to move piece
+        if (movePiece(startCol, startRow, endCol, endRow)) {
+            playerTurn = !playerTurn;  // Switch turns
+        } else {
+            cout << "Invalid move. Try again.\n";
+        }
+    }
+
+    return 0;
+}
